@@ -1,0 +1,107 @@
+import java.util.InputMismatchException;
+import java.util.Random;
+import java.util.Scanner;
+
+public class NumberGame {
+    public static void main(String[] args) {
+        int minimumNo = 1;
+        int maximumNo = 100;
+        int maximumAttempts = 10;
+        int totalRounds = 0;
+        int totalWins = 0;
+        int totalAttempts = 0;
+
+        System.out.println("NUMBER GAME");
+        System.out.println("------------");
+
+        Scanner sc = new Scanner(System.in);
+        boolean playAgain = true;
+
+        while (playAgain) {
+            Random r = new Random();
+            int randomNo = r.nextInt((maximumNo - minimumNo) + 1) + minimumNo;
+
+            System.out.println("Guess the number between " + minimumNo + " and " + maximumNo + ".");
+            System.out.println("You have " + maximumAttempts + " attempts to guess the number.\n");
+
+            int attempts = 0;
+            boolean correctGuess = false;
+
+            while (attempts < maximumAttempts) {
+                int guess = 0;
+                boolean validInput = false;
+
+               
+                while (!validInput) {
+                    System.out.print("Enter your guess: ");
+                    try {
+                        guess = sc.nextInt();
+                        if (guess < minimumNo || guess > maximumNo) {
+                            System.out.println("Please enter a number between " + minimumNo + " and " + maximumNo + ".");
+                        } else {
+                            validInput = true;
+                        }
+                    } catch (InputMismatchException e) {
+                        System.out.println("Invalid input! Please enter a valid number.");
+                        sc.next();  // Clear invalid input
+                    }
+                }
+
+                attempts++;
+
+                if (guess < randomNo) {
+                    System.out.println("It's too low! Please try again.");
+                } else if (guess > randomNo) {
+                    System.out.println("It's too high! Please try again.");
+                } else {
+                    System.out.println("Congratulations! You guessed the number correctly in " + attempts + " attempts.\n");
+                    correctGuess = true;
+                    totalWins++;
+                    break;
+                }
+
+                System.out.println("Attempts remaining: " + (maximumAttempts - attempts) + ".\n");
+            }
+
+            if (!correctGuess) {
+                System.out.println("Sorry, you didn't guess the number in " + maximumAttempts + " attempts. The number was " + randomNo + ".\n");
+            }
+
+            totalAttempts += attempts;
+            totalRounds++;
+
+           
+            boolean validResponse = false;
+            while (!validResponse) {
+                System.out.print("Do you want to play again? (yes/no): ");
+                String response = sc.next().toLowerCase();
+                if (response.equals("yes")) {
+                    validResponse = true;
+                    playAgain = true;
+                } else if (response.equals("no")) {
+                    validResponse = true;
+                    playAgain = false;
+                } else {
+                    System.out.println("Please enter a valid response (yes or no).");
+                }
+            }
+        }
+
+     
+        System.out.println("\n");
+        System.out.println("SCORE BOARD");
+        System.out.println("------------");
+        System.out.println("Thanks for playing!");
+        System.out.println("Total rounds played: " + totalRounds);
+        System.out.println("Total wins: " + totalWins);
+        System.out.println("Total attempts: " + totalAttempts);
+
+       
+        if (totalRounds > 0) {
+            System.out.println("Average attempts per round: " + (totalAttempts / (double) totalRounds));
+            System.out.println("Win rate: " + ((double) totalWins / totalRounds * 100) + "%");
+        } else {
+            System.out.println("No rounds were played.");
+        }
+    }
+}
